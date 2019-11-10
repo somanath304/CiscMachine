@@ -385,10 +385,7 @@ boolean halt=false;
         //Initialize PC to first instruction address
         
         PC_TextField.setText(Instr_start);
-        //String PC_String =PC_TextField.getText();
-        //System.out.print("PC Text Field - string "+PC_String+"\n");
         PC.value=Integer.parseInt(Instr_start);
-        //System.out.print("PC Value - int "+PC.value+"\n");
         
         //Initialize MAR and MBR 
         MAR_Textfield.setText(""+MAR.value);
@@ -423,8 +420,9 @@ boolean halt=false;
             System.out.println(e);
         }
         
-        //Initial Data Stored in Memory
+        
         if (programfile=="Program1.txt"){
+            //Initial Data Stored in Memory
             Memory_array[20]="50"; //Start of input values
             Memory_array[21]="70"; //Location of the search value
             Memory_array[22]="166"; //Start of instructions to perform the search
@@ -432,6 +430,7 @@ boolean halt=false;
         }
         
         else if (programfile=="Program2.txt") {
+            //Initial Data Stored in Memory
             Memory_array[10]="500"; //Input character address for EA
             Memory_array[11]="500"; //Start if input characters
             Memory_array[12]="950"; //Star of search word
@@ -448,34 +447,25 @@ boolean halt=false;
             Memory_array[26]="1038"; //Start of Comparison instructions, for IX2
             Memory_array[27]="1070"; //Start of Conclusion Instructios, for IX3
             
-            //String para;
-            //para=" The dog is brown . His name is max . ";
-            ///*
-            
+            //Read paragrapm text from file into memory            
             System.out.println("Program 2 paragraph text:\n");
             System.out.println("----------------\n");
             
             file = new File("Program2_Text.txt");
             try {
                 Scanner s = new Scanner(file);
-                //int indexInArray = Integer.parseInt(Instr_start);
-                //int m=Integer.parseInt(Instr_start);
                 while (s.hasNextLine()) {
                     //System.out.println(s.nextLine());
                     String input = s.nextLine();
                     System.out.println(input);
+                    Logger_Textfield.append(input+"\n");
                     
                     para = para + input;
-                    //Memory_array[indexInArray++] = instruction;
-                    //Instruction_TextArea.append(""+Memory_array[m]+"\n");
-                    //m++;
                     }
             } catch (FileNotFoundException e){
                 System.out.println(e);
                 }
-            //*/
-            //S_result=para.contains(s);
-            //System.out.println(para);
+            Logger_Textfield.append("-----------------------------\n");
             System.out.println("----------------\n");
             counter_for_input = 0;
 
@@ -483,10 +473,8 @@ boolean halt=false;
             int ascii[]=new int[charArray.length];
             for (int i=0;i<charArray.length;i++) 
             {
-                //System.out.println(charArray[i]);
                 ascii[i]=(int)charArray[i];
 
-               // System.out.println(ascii[i]);
             }
 
 
@@ -517,7 +505,6 @@ boolean halt=false;
             for(int x=0,val=Integer.parseInt(Memory_array[11]); x<temp.length-1; x++, val++){
 
             Memory_array[val]=String.valueOf(temp[x]);
-            //System.out.print("ASCII value '"+Memory_array[val]+"' stored at Memory location "+val+"\n");
             }
         }
         
@@ -1854,8 +1841,6 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
     //Convert address into Effective Address
     address = effective_address(IndexReg,indirect,address);
     
-    //CC1.value=true;
-    
     //Set Program Counter based on Control Code bit
     if(register==0){
         Logger_Textfield.append("Control Code bit "+register+" is '"+CC0.value+"'\n");
@@ -2249,14 +2234,12 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
 " Max is cute and fluffy and very friendly .\n" +
 " He likes going for walks and playing outside .\n" +
 " He also likes cuddling on the couch .\n" +
-" Max and Sara are very happy living together . \n\nEnter a single search word (no spaces) to find in the paragraph \n(Note the search value is case sensitive)");
-                //System.out.println("input variable:"+inputVariable);
+" Max and Sara are very happy living together . \n" + 
+"\nEnter a single search word (no spaces) to find in the paragraph \n(Note the search value is case sensitive)");
+                
                 search = inputVariable;
-                //System.out.println("search variable:"+search);
                 inputVariable = " "+inputVariable+" ";
-                //System.out.println("new input variable:"+inputVariable);
                 search = inputVariable;
-                //System.out.println("new s variable:"+search);
                 S_result=para.contains(search);
                                 
                 char[] charArray = inputVariable.toCharArray();
@@ -2265,13 +2248,9 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
                 
                 for (int i=0;i<charArray.length;i++) 
                 {
-                    //System.out.println(charArray[i]);
                     ascii[i]=(int)charArray[i];
-                    //System.out.println(ascii[i]);
                     sum = sum + ascii[i];
                 }
-                //IntStream search_code = Arrays.stream(ascii);
-                //search_code.forEach(i -> System.out.print(i));
                   
                 //Put the search value into the Register
                 if(register==0){
@@ -2298,41 +2277,16 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
                     Reg3_TextField.setText(Integer.toString(R3.value));
                 }
                 
-                
-                /*
-                int temp[]=new int[charArray.length];
-                int f=0;
-                
-                for (int i=0;i<charArray.length-1;i++) 
-                {
-                    temp[f]=ascii[i];
-                    f++;
-                }
-                
-                for(int x=0,val=Integer.parseInt(Memory_array[12]); x<temp.length-1; x++, val++){
-                    Memory_array[val]=String.valueOf(temp[x]);
-                    System.out.print("ASCII value '"+Memory_array[val]+"' stored at Memory location "+val+"\n");
-                }
-                */
-                
             }
             else { //address==0
 
-                //inputVariable= JOptionPane.showInputDialog(" Enter number "+counter_for_input);
-                //counter_for_input++;
-                
-                
-                
                 char[] charArray = search.toCharArray();
                 int ascii[]=new int[charArray.length];
-                //int sum=0;
                 
                 for (int i=0;i<charArray.length;i++) 
                 {
-                    //System.out.println(charArray[i]);
                     ascii[i]=(int)charArray[i];
-                    //System.out.println(ascii[i]);
-                    //sum = sum + ascii[i];
+                    
                 }
             
                 //Put the input value into the Register
@@ -2361,24 +2315,6 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
                     Reg3_TextField.setText(Integer.toString(R3.value));
                 }
             }
-            /*try 
-            { 
-                // checking valid integer using parseInt() method 
-                Integer.parseInt(inputVariable); 
-
-            }  
-            catch (NumberFormatException e)  
-            { 
-
-                JOptionPane.showMessageDialog(null, " The number you entered is not a valid integer number");
-                inputVariable= JOptionPane.showInputDialog("Enter a new valid integer number ");
-            } 
-
-            if (Integer.parseInt(inputVariable)>65535){ //If input value is out of bounds
-                    JOptionPane.showMessageDialog(null, "The value you entered is greater than the storage limit");
-                    inputVariable= JOptionPane.showInputDialog("Enter a new number less than 65,535: ");
-                }
-            //*/
             counter_for_input++;
         }
         
@@ -2476,6 +2412,7 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
     
     public void DVD (int register, int d)
     {
+       //Put register values into temporary variables 
        int reg_val=0;
        if (register==0) {reg_val=R0.value; Logger_Textfield.append("Divide R0 value "+R0.value+" by ");}
        if (register==1) {reg_val=R1.value; Logger_Textfield.append("Divide R1 value "+R1.value+" by ");}
@@ -2488,57 +2425,27 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
        if (d==2) {d_val=R2.value; Logger_Textfield.append("R2 value "+R2.value+"\n");}
        if (d==3) {d_val=R3.value; Logger_Textfield.append("R3 value "+R3.value+"\n");}
        
+       //Perform division
        int quotient;
        int remainder;
        
        if(d_val==0){throw new ArithmeticException("Condition code 3 Divide by zero");}
        else{
              quotient= reg_val / d_val;
-//             String a = Integer.toBinaryString(c);
-             //Reg0_TextField.setText(Integer.toString(c));
              remainder= reg_val % d_val;
-//             String aa = Integer.toBinaryString(r);
-             //Reg1_Textfield.setText(Integer.toString(r));
-             //Logger_Textfield.append("Division performed");
            }
        
-       //int reg_val;
+       //Put temporary variables back into register values
        if (register==0) {R0.value=quotient; Reg0_TextField.setText(Integer.toString(R0.value));}
        if (register==1) {R1.value=quotient; Reg1_Textfield.setText(Integer.toString(R1.value));}
        if (register==2) {R2.value=quotient; Reg2_TextField.setText(Integer.toString(R2.value));}
        if (register==3) {R3.value=quotient; Reg3_TextField.setText(Integer.toString(R3.value));}
 
-       //int d_val;
        if (d==0) {R0.value=remainder; Reg0_TextField.setText(Integer.toString(R0.value));}
        if (d==1) {R1.value=remainder; Reg1_Textfield.setText(Integer.toString(R1.value));}
        if (d==2) {R2.value=remainder; Reg2_TextField.setText(Integer.toString(R2.value));}
        if (d==3) {R3.value=remainder; Reg3_TextField.setText(Integer.toString(R3.value));}
-       /*
-         if(register==0 && d==2)
-         {           
-           if(R2.value==0){throw new ArithmeticException("Condition code 3 Divide by zero");}else{
-             int c= R0.value / R2.value;
-//             String a = Integer.toBinaryString(c);
-             Reg0_TextField.setText(Integer.toString(c));
-             int r= R0.value % R2.value;
-//             String aa = Integer.toBinaryString(r);
-             Reg1_Textfield.setText(Integer.toString(r));
-             Logger_Textfield.append("Division performed");
-           }      
-         }
-         
-         if(register==2 && d==0)
-         {           
-           if(R0.value==0){throw new ArithmeticException("Condition code 3 Divide by zero");}else{
-             int c= R2.value / R0.value;
-//             String a = Integer.toBinaryString(c);
-             Reg2_TextField.setText(Integer.toString(c));
-             int r= R2.value % R0.value;
-//             String aa = Integer.toBinaryString(r);
-             Reg3_TextField.setText(Integer.toString(r));
-             Logger_Textfield.append("Division performed");
-           }      
-         }*/
+       
     PC.value++;
     }
     
