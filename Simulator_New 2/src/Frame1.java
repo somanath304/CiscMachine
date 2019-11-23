@@ -37,7 +37,7 @@ String[] Memory_array=new String[2048];
 String MBR="0";
 String IR="";
 
-String programfile;
+String programfile="";
 
 String para="";
 String search="";
@@ -369,19 +369,29 @@ boolean halt=false;
     private void IPL_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_IPL_buttonActionPerformed
         // TODO add your handling code here:
         
-        programfile="Program2.txt";
-        String Instr_start;
+        //programfile="Program1.txt";
+        String Instr_start="";
         //Select which Program to run
-        //String programChoice = JOptionPane.showInputDialog("Select Program to Run. Enter 1 or 2");
-        //if(programChoice=="1"){
-            //programfile="Program1.txt";
-            //Instr_start = "100";
-        //}
-        //else if(programChoice=="2") {
-            //programfile="Program2.txt";
-            Instr_start = "1000";
-        //}
+        String programChoice="";
         
+        programChoice = JOptionPane.showInputDialog("Select Program to Run:\nEnter '1' for Program 1\nEnter '2' for Program 2\nEnter 'FP' for Floating Point Test");
+        System.out.println("Program Choice "+programChoice);
+        if(programChoice.equals("1")){
+            System.out.println("inside");
+            programfile="Program1.txt";
+            Instr_start = "100";
+        }
+        else if(programChoice.equals("2")) {
+            programfile="Program2.txt";
+            Instr_start = "1000";
+        }
+        else if (programChoice.equals("FP")) {
+            programfile="FloatingPoint.txt";
+            Instr_start = "100";
+        }
+        
+        System.out.println("Programfile "+programfile);
+        System.out.println("Instr Start "+Instr_start);
         //Initialize PC to first instruction address
         
         PC_TextField.setText(Instr_start);
