@@ -4,6 +4,7 @@ import Components.pc_class;
 import Components.Register;
 import Components.IX;
 import Components.CC;
+import Components.FP_Register;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -32,6 +33,8 @@ CC CC0=new CC();
 CC CC1=new CC();
 CC CC2=new CC();
 CC CC3=new CC();
+FP_Register FR0=new FP_Register();
+FP_Register FR1=new FP_Register();
 String[] Memory_array=new String[2048];
 
 String MBR="0";
@@ -377,7 +380,7 @@ boolean halt=false;
         programChoice = JOptionPane.showInputDialog("Select Program to Run:\nEnter '1' for Program 1\nEnter '2' for Program 2\nEnter 'FP' for Floating Point Test");
         System.out.println("Program Choice "+programChoice);
         if(programChoice.equals("1")){
-            System.out.println("inside");
+            //System.out.println("inside");
             programfile="Program1.txt";
             Instr_start = "100";
         }
@@ -391,7 +394,7 @@ boolean halt=false;
         }
         
         System.out.println("Programfile "+programfile);
-        System.out.println("Instr Start "+Instr_start);
+        System.out.println("Instr Start at "+Instr_start);
         //Initialize PC to first instruction address
         
         PC_TextField.setText(Instr_start);
@@ -430,6 +433,13 @@ boolean halt=false;
             System.out.println(e);
         }
             
+        if (programfile=="FloatingPoint.txt"){
+            //Initial Data Stored in Memory
+            Memory_array[20]="3.14159";
+            Memory_array[21]="1.618";
+            Memory_array[22]="1.5";
+            Memory_array[23]="2.25";
+        }
         
         if (programfile=="Program1.txt"){
             //Initial Data Stored in Memory
@@ -855,6 +865,41 @@ boolean halt=false;
                 opcode = 62;
                 Logger_Textfield.append("The instruction is 'Output character to Device from Register'\n");
                 break;
+                
+            case "FADD":
+                opcode = 33;
+                Logger_Textfield.append("The instruction is 'Floating Point Add Memory to Register'\n");
+                break;
+                
+            case "FSUB":
+                opcode = 34;
+                Logger_Textfield.append("The instruction is 'Floating Point Subtract Memory from Register'\n");
+                break;
+                
+            case "VADD":
+                opcode = 35;
+                Logger_Textfield.append("The instruction is 'Vector Add'\n");
+                break;
+                
+            case "VSUB":
+                opcode = 36;
+                Logger_Textfield.append("The instruction is 'Vector Subtract'\n");
+                break;
+                
+            case "CNVRT":
+                opcode = 37;
+                Logger_Textfield.append("The instruction is 'Convert to Fixed or Floating Point'\n");
+                break;
+                
+            case "LDFR":
+                opcode = 50;
+                Logger_Textfield.append("The instruction is 'Load Floating Point Register from Memory'\n");
+                break;
+                
+            case "STFR":
+                opcode = 51;
+                Logger_Textfield.append("The instruction is 'Store Floating Point Register to Memory'\n");
+                break;
 
                 
             case "HLT":
@@ -1049,7 +1094,29 @@ boolean halt=false;
         //case for OUT Output to Device from Register
             case 62: OUT(register); break;
 
-            case 36: TRAP(address); break;
+        //case for TRAP
+            case 30: TRAP(address); break;
+            
+        //case for FP Add Memory to Register
+            case 33: FADD(register,value,address,IndexReg,indirect); break;
+            
+        //case for FP Subtract Memory from Register
+            //case 34: FSUB(); break;
+            
+        //case for Vector Add
+            //case 35: VADD(); break;
+        
+        //case for Vector Subtract
+            //case 36: VSUB(); break;
+            
+        //case for Conversion to Fixed / Floating Point
+            //case 37: CNVRT(); break;
+            
+        //case for Load FP from Memory
+            case 50: LDFR(register,value,address,IndexReg,indirect); break;
+            
+        //case for Store FP to Memory
+            case 51: STFR(register,value,address,IndexReg,indirect); break;
 
         //case for TRR Test the Equality of Register and Register
             case 22:
@@ -2457,6 +2524,111 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
        if (d==3) {R3.value=remainder; Reg3_TextField.setText(Integer.toString(R3.value));}
        
     PC.value++;
+    }
+    
+    public void LDFR (int register, String value, int address, int IndexReg, int indirect){
+        //Convert address into Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        if(register==0)//load to resgister 0
+        {
+            //Get the data from Memory[address]
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+            MBR=Memory_array[address];
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Put the data in the Register
+            value=Memory_array[address];
+            FR0.value=Float.parseFloat(value);
+            //FR0_TextField.setText(""+FR0.value);
+            System.out.println("Memory String: "+value);
+            System.out.println("FR0: "+FR0.value);
+            Logger_Textfield.append("Floating Point Register "+register+" loaded '"+FR0.value+"' from memory address "+address+"\n");
+        }
+        if(register==1)//load to resgister 1
+        {
+            //Get the data from Memory[address]
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+            MBR=Memory_array[address];
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Put the data in the Register
+            value=Memory_array[address];
+            FR1.value=Float.parseFloat(value);
+            //FR1_Textfield.setText(""+FR1.value);
+            System.out.println("Memory String: "+value);
+            System.out.println("FR1: "+FR1.value);
+            Logger_Textfield.append("Floating Point Register "+register+" loaded '"+FR1.value+"' from memory address "+address+"\n");
+        }
+        PC.value++;
+    }
+    
+    public void STFR (int register, String value, int address, int IndexReg, int indirect){
+        //Convert address to Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        if(register==0){
+                        
+            //Set the Memory[address] to be written
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+
+            //Get the data from Register
+            MBR=String.valueOf(FR0.value);
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Store the data in Memory[address]
+            Memory_array[address]=MBR;
+            Logger_Textfield.append("Memory location "+address+" stored '"+FR0.value+"' from Register "+register+"\n");
+        }
+        if(register==1){
+            
+            //Set the Memory[address] to be written
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+            
+            //Get the data from Register
+            MBR=String.valueOf(FR1.value);
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Store the data in Memory[address]
+            Memory_array[address]=MBR;
+            Logger_Textfield.append("Memory location "+address+" stored '"+FR1.value+"' from Register "+register+"\n");
+        }
+        PC.value++;
+    }
+    
+    public void FADD (int register, String value, int address, int IndexReg, int indirect) {
+        address = effective_address(IndexReg,indirect,address);
+        
+        if(register==0){  
+            value=(Memory_array[address]);
+            MBR_TextField.setText(""+value);
+            FR0.value=FR0.value+Float.parseFloat(value);
+            //FR0_TextField.setText(Float.toString(FR0.value)); 
+            Logger_Textfield.append("Floating Point Register is added with value "+value);
+
+            }  
+        
+        if(register==1){  
+            value=(Memory_array[address]);
+            MBR_TextField.setText(""+value);
+            FR1.value=FR1.value+Float.parseFloat(value);
+            //FR1_Textfield.setText(Float.toString(FR1.value));     
+            Logger_Textfield.append("Floating Point Register is added with value "+value);
+            }  
+        
+        PC.value++;
     }
     
 
