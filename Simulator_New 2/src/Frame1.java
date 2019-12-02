@@ -1101,7 +1101,7 @@ boolean halt=false;
             case 33: FADD(register,value,address,IndexReg,indirect); break;
             
         //case for FP Subtract Memory from Register
-            //case 34: FSUB(); break;
+            case 34: FSUB(register,value,address,IndexReg,indirect); break;
             
         //case for Vector Add
             //case 35: VADD(); break;
@@ -2615,8 +2615,9 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
             value=(Memory_array[address]);
             MBR_TextField.setText(""+value);
             FR0.value=FR0.value+Float.parseFloat(value);
-            //FR0_TextField.setText(Float.toString(FR0.value)); 
-            Logger_Textfield.append("Floating Point Register is added with value "+value);
+            //FR0_TextField.setText(Float.toString(FR0.value));
+            System.out.println("FR0: "+FR0.value);
+            Logger_Textfield.append("Floating Point Register is added with value "+value+" and now holds "+FR0.value);
 
             }  
         
@@ -2624,10 +2625,49 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
             value=(Memory_array[address]);
             MBR_TextField.setText(""+value);
             FR1.value=FR1.value+Float.parseFloat(value);
-            //FR1_Textfield.setText(Float.toString(FR1.value));     
-            Logger_Textfield.append("Floating Point Register is added with value "+value);
+            //FR1_Textfield.setText(Float.toString(FR1.value));
+            System.out.println("FR1: "+FR1.value);
+            Logger_Textfield.append("Floating Point Register is added with value "+value+" and now holds "+FR1.value);
             }  
         
+        PC.value++;
+    }
+    
+    public void FSUB (int register, String value, int address, int IndexReg, int indirect) {
+        //Convert address into Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        if(register==0){  
+            //Get the contents of Memory[address]
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+            MBR=Memory_array[address];
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Subtract the contets of Memory[address] from the Register
+            value=(MBR);
+            FR0.value=FR0.value-Float.parseFloat(value);
+            //FR0_TextField.setText(Float.toString(FR0.value));
+            Logger_Textfield.append("Floating Point Register "+register+" subtracted value "+value+" and now holds '"+FR0.value+"'\n");
+            }  
+        
+        if(register==1){  
+            //Get the contents of Memory[address]
+            MAR.value=address;
+            MAR_Textfield.setText(""+MAR.value);
+            Logger_Textfield.append("MAR was set to "+MAR.value+"\n");
+            MBR=Memory_array[address];
+            MBR_TextField.setText(MBR);
+            Logger_Textfield.append("MBR was set to "+MBR+"\n");
+            
+            //Subtract the contets of Memory[address] from the Register
+            value=(MBR);
+            FR1.value=FR1.value-Float.parseFloat(value);
+            //FR1_Textfield.setText(Float.toString(FR1.value));
+            Logger_Textfield.append("Floating Point Register "+register+" subtracted value "+value+" and now holds '"+FR1.value+"'\n");
+            }
         PC.value++;
     }
     
