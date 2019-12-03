@@ -435,10 +435,24 @@ boolean halt=false;
             
         if (programfile=="FloatingPoint.txt"){
             //Initial Data Stored in Memory
-            Memory_array[20]="3.14159";
-            Memory_array[21]="1.618";
-            Memory_array[22]="1.5";
+            Memory_array[20]="5";
+            Memory_array[21]="10";
+            Memory_array[22]="15";
             Memory_array[23]="2.25";
+            Memory_array[24]="1.5";
+            Memory_array[25]="3.14159";
+
+            Memory_array[15]="4";
+            Memory_array[16]="63";
+            Memory_array[17]="19";
+            Memory_array[18]="81";
+            Memory_array[19]="37";
+
+            Memory_array[10]="107";
+            Memory_array[11]="92";
+            Memory_array[12]="145";
+            Memory_array[13]="122";
+            Memory_array[14]="99";
         }
         
         if (programfile=="Program1.txt"){
@@ -1104,10 +1118,10 @@ boolean halt=false;
             case 34: FSUB(register,value,address,IndexReg,indirect); break;
             
         //case for Vector Add
-            //case 35: VADD(); break;
+            case 35: VADD(register,value,address,IndexReg,indirect); break;
         
         //case for Vector Subtract
-            //case 36: VSUB(); break;
+            case 36: VSUB(register,value,address,IndexReg,indirect); break;
             
         //case for Conversion to Fixed / Floating Point
             //case 37: CNVRT(); break;
@@ -2671,8 +2685,55 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
         PC.value++;
     }
     
+    public void VADD (int register, String value, int address, int IndexReg, int indirect){
+        //Convert address into Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        int vLength=0;
+        if (register==0){vLength = (int) FR0.value;}
+        if (register==1){vLength = (int) FR1.value;}
+        
+        int V1 = Integer.parseInt(Memory_array[address]); //retrieves addresss of vector 1
+        int V2 = Integer.parseInt(Memory_array[address+1]); //retrieves address of vector 2
+        System.out.println("V1: "+V1);
+        System.out.println("V2: "+V2);
+        System.out.println(Memory_array[V1]);
+        System.out.println(Memory_array[V2]);
+        
+        for (int i=0;i<vLength;i++){
+            Memory_array[V1+i]=String.valueOf(Integer.parseInt(Memory_array[V1+i])+Integer.parseInt(Memory_array[V2+i]));
+            Logger_Textfield.append("Memory location "+(V1+i)+" set to '"+Memory_array[V1+i]+"'\n");
+        }
+        
+        Logger_Textfield.append("Vector addition performed memory to memory\n");
+        
+        PC.value++;
+    }
 
-
+    public void VSUB (int register, String value, int address, int IndexReg, int indirect){
+        //Convert address into Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        int vLength=0;
+        if (register==0){vLength = (int) FR0.value;}
+        if (register==1){vLength = (int) FR1.value;}
+        
+        int V1 = Integer.parseInt(Memory_array[address]); //retrieves addresss of vector 1
+        int V2 = Integer.parseInt(Memory_array[address+1]); //retrieves address of vector 2
+        System.out.println("V1: "+V1);
+        System.out.println("V2: "+V2);
+        System.out.println(Memory_array[V1]);
+        System.out.println(Memory_array[V2]);
+        
+        for (int i=0;i<vLength;i++){
+            Memory_array[V1+i]=String.valueOf(Integer.parseInt(Memory_array[V1+i])-Integer.parseInt(Memory_array[V2+i]));
+            Logger_Textfield.append("Memory location "+(V1+i)+" set to '"+Memory_array[V1+i]+"'\n");
+        }
+        
+        Logger_Textfield.append("Vector subtraction performed memory to memory\n");
+        
+        PC.value++;
+    }
 }
 
 
