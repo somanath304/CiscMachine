@@ -920,6 +920,11 @@ boolean halt=false;
                 opcode = 0;
                 halt=true;
                 
+                if (programfile=="FloatingPoint.txt"){
+                    Logger_Textfield.append("HLT encountered ");
+                    Logger_Textfield.append("\n-----------------------------\n");
+                }
+                
                 if (programfile=="Program1.txt"){
                     Logger_Textfield.append("HLT encountered ");
                     Logger_Textfield.append("\n-----------------------------\n");
@@ -1124,7 +1129,7 @@ boolean halt=false;
             case 36: VSUB(register,value,address,IndexReg,indirect); break;
             
         //case for Conversion to Fixed / Floating Point
-            //case 37: CNVRT(); break;
+            case 37: CNVRT(register,value,address,IndexReg,indirect); break;
             
         //case for Load FP from Memory
             case 50: LDFR(register,value,address,IndexReg,indirect); break;
@@ -2631,7 +2636,7 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
             FR0.value=FR0.value+Float.parseFloat(value);
             //FR0_TextField.setText(Float.toString(FR0.value));
             System.out.println("FR0: "+FR0.value);
-            Logger_Textfield.append("Floating Point Register is added with value "+value+" and now holds "+FR0.value);
+            Logger_Textfield.append("Floating Point Register 0 is added with value "+value+" and now holds "+FR0.value);
 
             }  
         
@@ -2641,7 +2646,7 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
             FR1.value=FR1.value+Float.parseFloat(value);
             //FR1_Textfield.setText(Float.toString(FR1.value));
             System.out.println("FR1: "+FR1.value);
-            Logger_Textfield.append("Floating Point Register is added with value "+value+" and now holds "+FR1.value);
+            Logger_Textfield.append("Floating Point Register 1 is added with value "+value+" and now holds "+FR1.value);
             }  
         
         PC.value++;
@@ -2731,6 +2736,77 @@ public void SOB(int register,int address,int IndexReg, int indirect) {
         }
         
         Logger_Textfield.append("Vector subtraction performed memory to memory\n");
+        
+        PC.value++;
+    }
+    
+    public void CNVRT (int register, String value, int address, int IndexReg, int indirect){
+        //Convert address into Effective Address
+        address = effective_address(IndexReg,indirect,address);
+        
+        double temp_double;
+        float temp4_float;
+        int temp5;
+        int convertedIntValue;
+        String Temp5;
+        
+        temp_double=Double.parseDouble(Memory_array[address]);
+        
+        if(register==0){
+            if(R0.value==0){//convert float to fixed
+                temp4_float=Float.parseFloat(Memory_array[address]);
+                convertedIntValue=Math.round(temp4_float);
+                R0.value = convertedIntValue;
+                Reg0_TextField.setText(Integer.toString(R0.value));
+                Logger_Textfield.append("Floating Point Number "+temp4_float+" converted to Fixed Point "+convertedIntValue+" and stored in R0\n");
+            }
+            if(R0.value==1){// convert fixed to float
+                FR0.value = (float) temp_double;
+                Logger_Textfield.append("Fixed Point "+Memory_array[address]+" converted to Floating Point "+FR0.value+" and stored in FR0\n");
+            }
+        }
+        
+        if(register==1){
+            if(R1.value==0){//convert float to fixed
+                temp4_float=Float.parseFloat(Memory_array[address]);
+                convertedIntValue=Math.round(temp4_float);
+                R1.value = convertedIntValue;
+                Reg1_Textfield.setText(Integer.toString(R1.value));
+                Logger_Textfield.append("Floating Point Number "+temp4_float+" converted to Fixed Point "+convertedIntValue+" and stored in R1\n");
+            }
+            if(R1.value==1){// convert fixed to float
+                FR0.value = (float) temp_double;
+                Logger_Textfield.append("Fixed Point "+Memory_array[address]+" converted to Floating Point "+FR0.value+" and stored in FR0\n");
+            }
+        }
+        
+        if(register==2){
+            if(R2.value==0){//convert float to fixed
+                temp4_float=Float.parseFloat(Memory_array[address]);
+                convertedIntValue=Math.round(temp4_float);
+                R2.value = convertedIntValue;
+                Reg2_TextField.setText(Integer.toString(R2.value));
+                Logger_Textfield.append("Floating Point Number "+temp4_float+" converted to Fixed Point "+convertedIntValue+" and stored in R2\n");
+            }
+            if(R2.value==1){// convert fixed to float
+                FR0.value = (float) temp_double;
+                Logger_Textfield.append("Fixed Point "+Memory_array[address]+" converted to Floating Point "+FR0.value+" and stored in FR0\n");
+            }
+        }
+        
+        if(register==3){
+            if(R3.value==0){//convert float to fixed
+                temp4_float=Float.parseFloat(Memory_array[address]);
+                convertedIntValue=Math.round(temp4_float);
+                R3.value = convertedIntValue;
+                Reg3_TextField.setText(Integer.toString(R3.value));
+                Logger_Textfield.append("Floating Point Number "+temp4_float+" converted to Fixed Point "+convertedIntValue+" and stored in R3\n");
+            }
+            if(R3.value==1){// convert fixed to float
+                FR0.value = (float) temp_double;
+                Logger_Textfield.append("Fixed Point "+Memory_array[address]+" converted to Floating Point "+FR0.value+" and stored in FR0\n");
+            }
+        }
         
         PC.value++;
     }
